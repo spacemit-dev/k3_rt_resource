@@ -29,7 +29,7 @@
 #define DEFAULT_REPORT_INTERVAL   1000U
 #define RPMSG_PERF_MAGIC          0x52504631U
 #define RPMSG_PERF_HEADER_SIZE    20U
-#define RPMSG_PERF_MAX_FRAME_SIZE 2048U
+#define RPMSG_PERF_MAX_FRAME_SIZE 496U
 
 struct rpmsg_endpoint_info {
     char name[32];
