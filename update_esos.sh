@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 running_in_chroot() {
   if [ "${SYSTEMD_IGNORE_CHROOT:-0}" = "1" ]; then
     return 1
@@ -83,7 +85,7 @@ get_mtdblock_by_name() {
 }
 
 get_esos_kernel_url_base() {
-  local base_url="./firmware"
+  local base_url="$SCRIPT_DIR/firmware"
   local os_id=""
   local os_version_id=""
   local path_version=""
