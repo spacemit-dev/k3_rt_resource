@@ -1,0 +1,3 @@
+[submodule "rt-perf-test"]
+	path = rt-perf-test
+	url = https://github.com/spacemit-dev/rt-perf-test
