@@ -82,23 +82,46 @@ get_mtdblock_by_name() {
   return 1
 }
 
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-FIRMWARE_DIR="$SCRIPT_DIR/firmware"
+get_esos_kernel_url_base() {
+  local base_url="./firmware"
+  local os_id=""
+  local os_version_id=""
+  local path_version=""
 
-for file in esos.itb rt24_os0_rcpu.elf rt24_os1_rcpu.elf; do
-  if [ ! -f "$FIRMWARE_DIR/$file" ]; then
-    echo "Missing $FIRMWARE_DIR/$file"
-    exit 1
+  if [ -r "/etc/os-release" ]; then
+    os_id=$(awk -F= '$1 == "ID" {gsub(/"/, "", $2); print $2; exit}' /etc/os-release)
+    os_version_id=$(awk -F= '$1 == "VERSION_ID" {gsub(/"/, "", $2); print $2; exit}' /etc/os-release)
   fi
-done
 
+  if [ "$os_id" = "bianbu" ]; then
+    case "$os_version_id" in
+      4.0)
+        path_version="4.0.0"
+        ;;
+      4.0.1)
+        path_version="4.0.1"
+        ;;
+    esac
+
+    if [ -n "$path_version" ]; then
+        echo "识别到 Bianbu 版本: $os_version_id" >&2
+        echo "$base_url/$path_version"
+        return 0
+    fi
+  fi
+
+  echo "$base_url"
+}
+
+rm -rf ~/tmp_esos
 mkdir -p ~/tmp_esos
 cd ~/tmp_esos
 
-echo "📥 从 firmware 目录拷贝 esos 文件..."
-cp "$FIRMWARE_DIR/esos.itb" .
-cp "$FIRMWARE_DIR/rt24_os0_rcpu.elf" .
-cp "$FIRMWARE_DIR/rt24_os1_rcpu.elf" .
+echo "📥 下载 esos 文件..."
+ESOS_KERNEL_URL_BASE=$(get_esos_kernel_url_base)
+cp "$ESOS_KERNEL_URL_BASE/esos.itb" .
+cp "$ESOS_KERNEL_URL_BASE/rt24_os0_rcpu.elf" .
+cp "$ESOS_KERNEL_URL_BASE/rt24_os1_rcpu.elf" .
 
 echo "🔁 替换系统文件..."
 mkdir -p /usr/lib/riscv64-linux-gnu/esos
@@ -251,3 +274,4 @@ update-initramfs -u
 
 echo "✅ 完成"
 
+rm -rf ~/tmp_esos
