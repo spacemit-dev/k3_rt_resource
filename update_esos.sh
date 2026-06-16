@@ -121,6 +121,7 @@ cd ~/tmp_esos
 
 echo "📥 下载 esos 文件..."
 ESOS_KERNEL_URL_BASE=$(get_esos_kernel_url_base)
+echo "使用 esos 文件 URL 基础路径: $ESOS_KERNEL_URL_BASE"
 cp "$ESOS_KERNEL_URL_BASE/esos.itb" .
 cp "$ESOS_KERNEL_URL_BASE/rt24_os0_rcpu.elf" .
 cp "$ESOS_KERNEL_URL_BASE/rt24_os1_rcpu.elf" .
