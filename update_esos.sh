@@ -103,6 +103,9 @@ get_esos_kernel_url_base() {
       4.0.1)
         path_version="4.0.1"
         ;;
+      4.0.2)
+        path_version="4.0.2"
+        ;;
     esac
 
     if [ -n "$path_version" ]; then
